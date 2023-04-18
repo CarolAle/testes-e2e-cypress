@@ -19,7 +19,6 @@ Cypress.Commands.add('fillSignupFormAndSubmit', (email, password) => {
       cy.contains('button', 'Login').click()
       cy.contains('h1', 'Your Notes').should('be.visible')
     }
-  
     if (cacheSession) {
       cy.session([username, password], login)
     } else {
@@ -27,41 +26,29 @@ Cypress.Commands.add('fillSignupFormAndSubmit', (email, password) => {
     }
   })
 
-// cypress/support/commands.js
-
-// Outros comands aqui ...
-
 const attachFileHandler = () => cy.get('#file').attachFile('example.json')
 
 Cypress.Commands.add('createNote', (note, attachFile = false) => {
   cy.visit('/notes/new')
   cy.get('#content').type(note)
-
   if (attachFile) {
     attachFileHandler()
   }
-
   cy.contains('button', 'Create').click()
-
   cy.contains('.list-group-item', note).should('be.visible')
 })
 
 Cypress.Commands.add('editNote', (note, newValue, attachFile) => {
   cy.intercept('GET', '**/notes/**').as('getNote')
-
   cy.contains('.list-group-item', note).click()
   cy.wait('@getNote')
-
   cy.get('#content')
     .clear()
     .type(newValue)
-
   if (attachFile) {
     attachFileHandler()
   }
-
   cy.contains('button', 'Save').click()
-
   cy.contains('.list-group-item', note).should('not.exist')
   cy.contains('.list-group-item', newValue).should('be.visible')
 })
@@ -69,7 +56,6 @@ Cypress.Commands.add('editNote', (note, newValue, attachFile) => {
 Cypress.Commands.add('deleteNote', note => {
   cy.contains('.list-group-item', note).click()
   cy.contains('button', 'Delete').click()
-
   cy.contains('.list-group-item', note).should('not.exist')
 })
 
